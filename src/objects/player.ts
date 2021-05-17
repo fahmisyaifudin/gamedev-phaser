@@ -42,10 +42,10 @@ export class Player extends Phaser.GameObjects.Sprite {
     
     public turn(key: string): void{
         if (key == 'LEFT') {
-            this.body.setVelocityX(-160);
+            this.body.setVelocityX(-240);
             this.anims.play('left', true)
         } else if (key == 'RIGHT') {
-            this.body.setVelocityX(160);
+            this.body.setVelocityX(240);
             this.anims.play('right', true);
         } else if (key == 'IDLE') {
             this.body.setVelocityX(0);
