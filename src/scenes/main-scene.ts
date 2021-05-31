@@ -64,7 +64,7 @@ export class MainScene extends Phaser.Scene {
     
 
     this.respawnTime = this.time.addEvent({
-      delay: 4000,
+      delay: 3000,
       callback: this.respawnFood,
       callbackScope: this,
       loop: true
@@ -93,15 +93,6 @@ export class MainScene extends Phaser.Scene {
     }else {
       this.player.turn('IDLE');
     }
-
-    if (this.input.keyboard.checkDown(this.isShiftButton, 500)) {
-      if (this.mode != (Object.keys(Gizi).length / 2) - 1) {
-        this.mode++;
-      } else {
-        this.mode = 0;
-      }
-      this.modeText.setText('Mode: ' + Gizi[this.mode]);
-    }
   }
 
   private respawnFood() {
@@ -110,11 +101,21 @@ export class MainScene extends Phaser.Scene {
     this.food[key].create(Phaser.Math.Between(50, 750), 0, FoodSetting[key][foodItem]);
   }
 
+  private changeMode(){
+    if (this.mode != (Object.keys(Gizi).length / 2) - 1) {
+      this.mode++;
+    } else {
+      this.mode = 0;
+    }
+    this.modeText.setText('Mode: ' + Gizi[this.mode]);
+  }
+
   private collectFood(player: Player, food: Phaser.Physics.Arcade.Image) {
     food.disableBody(true, true);
     let foodSelect = Object.values(FoodSetting).findIndex(value => value.includes(food.texture.key))
     if (this.mode == foodSelect) {
       this.score++;
+      this.changeMode()
       this.respawnTime.timeScale += 0.05;
     } else {
       this.score--;

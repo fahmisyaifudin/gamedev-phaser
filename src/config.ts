@@ -1,4 +1,6 @@
+import { MenuScene } from './scenes/menu-scene';
 import { MainScene } from './scenes/main-scene';
+import { BootScene } from './scenes/boot-scene';
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
   title: 'Webpack-Boilerplate',
@@ -15,5 +17,5 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
       gravity: { y: 100 }
     }
   },
-  scene: [MainScene]
+  scene: [BootScene, MenuScene, MainScene]
 };
