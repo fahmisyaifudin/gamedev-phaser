@@ -16,6 +16,7 @@ export class MainScene extends Phaser.Scene {
   private giziLength: number;
 
   private respawnTime: Phaser.Time.TimerEvent;
+  private hpAutoDecreaseTime: Phaser.Time.TimerEvent;
 
   private isShiftButton: Phaser.Input.Keyboard.Key;
   private mode: Gizi;
@@ -70,10 +71,16 @@ export class MainScene extends Phaser.Scene {
       loop: true
     })
 
+    this.hpAutoDecreaseTime = this.time.addEvent({
+      delay: 1000,
+      callback: this.autoHpDecrease,
+      callbackScope: this,
+      loop: true
+    })
+
     this.score = 0;
-    this.scoreText = this.add.text(16, 16, 'Score: ' + this.score);
     this.mode = Gizi.Karbonhidrat;
-    this.modeText = this.add.text(116, 16, 'Mode: ' + Gizi[this.mode]);
+    this.modeText = this.add.text(16, 16, 'Mode: ' + Gizi[this.mode]);
 
     this.physics.add.collider(this.player, this.platforms);
 
@@ -114,12 +121,23 @@ export class MainScene extends Phaser.Scene {
     food.disableBody(true, true);
     let foodSelect = Object.values(FoodSetting).findIndex(value => value.includes(food.texture.key))
     if (this.mode == foodSelect) {
+      this.player.hpIncrease();
       this.score++;
       this.changeMode()
       this.respawnTime.timeScale += 0.05;
     } else {
+      this.player.hpDecrease();
+      this.changeMode()
       this.score--;
     }
-    this.scoreText.setText('Score: ' + this.score)
+    this.hpAutoDecreaseTime.timeScale += 0.01;
+  }
+
+  private autoHpDecrease(){
+    if (this.player.hpVal <= 0) {
+     this.scene.start('MenuScene', { title: 'GAME OVER'})
+    }else{ 
+      this.player.hpDecrease(1)
+    }
   }
 }

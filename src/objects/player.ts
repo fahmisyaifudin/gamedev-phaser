@@ -1,8 +1,10 @@
 import { ISpriteConstructor } from "../interfaces/sprite.interface";
+import { HealthBar } from "./healthbar";
 
 
 export class Player extends Phaser.GameObjects.Sprite {
   body: Phaser.Physics.Arcade.Body;
+  hp: HealthBar;
 
   constructor(aParams: ISpriteConstructor) {
     super(aParams.scene, aParams.x, aParams.y, aParams.texture, aParams.frame);
@@ -10,10 +12,21 @@ export class Player extends Phaser.GameObjects.Sprite {
       this.initSprite();
       this.initAnimation();
       this.scene.add.existing(this);
-  }
+    }
+
+    update(){
+        if (this.hp.value == 0) {
+            console.log('GAME OVER')
+        }
+    }
+
+    public get hpVal() : number {
+        return this.hp.value
+    }
 
     private initSprite() {
         this.scene.physics.world.enable(this);
+        this.hp = new HealthBar(this.scene, 680, 10);
         this.body.setBounce(0.2, 0);
         this.body.setCollideWorldBounds(true);
     }
@@ -51,5 +64,13 @@ export class Player extends Phaser.GameObjects.Sprite {
             this.body.setVelocityX(0);
             this.anims.play('turn');
         }
+    }
+
+    public hpIncrease(point: number = -4): void{
+        this.hp.decrease(point)
+    }
+
+    public hpDecrease(point: number = 4): void{
+        this.hp.decrease(point)
     }
 }

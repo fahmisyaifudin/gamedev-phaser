@@ -1,5 +1,8 @@
+import { ISceneConstructor } from "../interfaces/scene.interface";
+
 export class MenuScene extends Phaser.Scene {
   private startKey: Phaser.Input.Keyboard.Key;
+  private title: string;
   private titleBitmapText: Phaser.GameObjects.BitmapText;
   private playBitmapText: Phaser.GameObjects.BitmapText;
 
@@ -13,11 +16,12 @@ export class MenuScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x98d687);
   }
 
-  init(): void {
+  init(data: ISceneConstructor): void {
     this.startKey = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.ENTER
     );
     this.startKey.isDown = false;
+    this.title = data.title ? data.title : ''
   }
 
   create(): void {
@@ -25,7 +29,7 @@ export class MenuScene extends Phaser.Scene {
       0,
       200,
       'font',
-      'DIET ALA MONYET',
+      'SARU NO DIETTO',
       30
     );
 
@@ -33,7 +37,7 @@ export class MenuScene extends Phaser.Scene {
       this.titleBitmapText.width
     );
 
-    this.playBitmapText = this.add.bitmapText(0, 300, 'font', 'ENTER: PLAY', 25);
+    this.playBitmapText = this.add.bitmapText(0, 300, 'font', this.title ? this.title : 'ENTER: PLAY \n F1  : HELP', 25);
 
     this.playBitmapText.x = this.getCenterXPositionOfBitmapText(
       this.playBitmapText.width

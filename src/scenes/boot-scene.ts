@@ -44,7 +44,7 @@ export class BootScene extends Phaser.Scene {
     }
   
     update(): void {
-      this.scene.start('MenuScene');
+      this.scene.start('MenuScene', { title: ''});
     }
   
     private createLoadingbar(): void {
