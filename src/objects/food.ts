@@ -12,7 +12,7 @@ export const FoodSetting : IFoodGroup = {
     [Gizi.Karbonhidrat] : ['bread', 'potato'],
     [Gizi.Protein]: ['egg', 'fish', 'meat'],
     [Gizi.Lemak]: ['chocolate', 'cheese'],
-    [Gizi.Vitamin]: ['apple', 'banana', 'wortel']
+    [Gizi.Vitamin]: ['apple', 'banana', 'wortel', 'lemon']
 }
 
   

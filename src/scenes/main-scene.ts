@@ -10,6 +10,7 @@ export class MainScene extends Phaser.Scene {
   private asam: Phaser.Physics.Arcade.Group
   private basa: Phaser.Physics.Arcade.Group
   private scoreText: any;
+  private shiftBtn: Phaser.Input.Keyboard.Key;
   private modeText: any;
 
   private score: number;
@@ -35,7 +36,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image('bread', 'assets/food/bread.png');
     this.load.image('cheese', 'assets/food/cheese.png');
     this.load.image('chocolate', 'assets/food/chocolate.png');
-    this.load.image('egg', 'assets/food/chocolate.png');
+    this.load.image('egg', 'assets/food/egg.png');
     this.load.image('fish', 'assets/food/fish.png');
     this.load.image('lemon', 'assets/food/lemon.png');
     this.load.image('meat', 'assets/food/meat.png');
@@ -43,6 +44,12 @@ export class MainScene extends Phaser.Scene {
     this.load.image('wortel', 'assets/food/wortel.png');
    
     this.load.spritesheet('monkey', 'assets/monkey.png',{ frameWidth: 32, frameHeight: 48 });
+  }
+
+  init() : void {
+    this.shiftBtn = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SHIFT
+    );
   }
 
   create(): void {
@@ -80,7 +87,7 @@ export class MainScene extends Phaser.Scene {
 
     this.score = 0;
     this.mode = Gizi.Karbonhidrat;
-    this.modeText = this.add.text(16, 16, 'Mode: ' + Gizi[this.mode]);
+    this.modeText = this.add.text(16, 16, 'Misi: ' + Gizi[this.mode]);
 
     this.physics.add.collider(this.player, this.platforms);
 
@@ -100,6 +107,10 @@ export class MainScene extends Phaser.Scene {
     }else {
       this.player.turn('IDLE');
     }
+
+    if (this.input.keyboard.checkDown(this.shiftBtn, 500)) {
+      this.changeMode()
+    }
   }
 
   private respawnFood() {
@@ -114,7 +125,7 @@ export class MainScene extends Phaser.Scene {
     } else {
       this.mode = 0;
     }
-    this.modeText.setText('Mode: ' + Gizi[this.mode]);
+    this.modeText.setText('Misi: ' + Gizi[this.mode]);
   }
 
   private collectFood(player: Player, food: Phaser.Physics.Arcade.Image) {
@@ -135,7 +146,7 @@ export class MainScene extends Phaser.Scene {
 
   private autoHpDecrease(){
     if (this.player.hpVal <= 0) {
-     this.scene.start('MenuScene', { title: 'GAME OVER'})
+     this.scene.start('MenuScene', { title: 'GAME OVER', score: this.score })
     }else{ 
       this.player.hpDecrease(1)
     }
