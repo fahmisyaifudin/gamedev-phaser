@@ -2,6 +2,11 @@ import { Player } from "../objects/player";
 import { Larutan, Gizi } from "../enum/mode";
 import { IFood, FoodSetting } from "../objects/food";
 
+import { getFirestore, collection, addDoc } from "firebase/firestore"
+import { ISceneConstructor } from "../interfaces/scene.interface";
+
+const db = getFirestore();
+
 export class MainScene extends Phaser.Scene {
   private platforms: Phaser.Physics.Arcade.StaticGroup
   private player: Player
@@ -21,6 +26,8 @@ export class MainScene extends Phaser.Scene {
 
   private isShiftButton: Phaser.Input.Keyboard.Key;
   private mode: Gizi;
+
+  private playerName: string;
 
   body: Phaser.Physics.Arcade.Body
   constructor() {
@@ -46,13 +53,16 @@ export class MainScene extends Phaser.Scene {
     this.load.spritesheet('monkey', 'assets/monkey.png',{ frameWidth: 32, frameHeight: 48 });
   }
 
-  init() : void {
+  init(data: ISceneConstructor) : void {
     this.shiftBtn = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SHIFT
     );
+
+    this.playerName = data.player ? data.player : '';
   }
 
   create(): void {
+
     this.add.image(400, 300, 'sky');
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -146,7 +156,11 @@ export class MainScene extends Phaser.Scene {
 
   private autoHpDecrease(){
     if (this.player.hpVal <= 0) {
-     this.scene.start('MenuScene', { title: 'GAME OVER', score: this.score })
+      addDoc(collection(db, "highscores"), {
+        name: this.playerName.toUpperCase(),
+        score: this.score,
+      }).then(() => this.scene.start('MenuScene', { title: 'GAME OVER', score: this.score }));
+      // this.scene.start('MenuScene', { title: 'GAME OVER', score: this.score })
     }else{ 
       this.player.hpDecrease(1)
     }

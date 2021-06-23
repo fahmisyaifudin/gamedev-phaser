@@ -1,4 +1,16 @@
 import { ISceneConstructor } from "../interfaces/scene.interface";
+import { collection, getDocs, limit, orderBy } from "firebase/firestore"; 
+
+import { initializeApp } from "firebase/app"
+import { getFirestore, query } from "firebase/firestore"
+
+const firebaseApp = initializeApp({
+  apiKey: 'AIzaSyBm8Mkj2xapIYDXyeOzUGj305GL_YgJ-Yo',
+  authDomain: 'diet-si-monkey.firebaseapp.com',
+  projectId: 'diet-si-monkey'
+});
+
+const db = getFirestore();
 
 export class MenuScene extends Phaser.Scene {
   private startKey: Phaser.Input.Keyboard.Key;
@@ -7,6 +19,7 @@ export class MenuScene extends Phaser.Scene {
   private score: number;
   private titleBitmapText: Phaser.GameObjects.BitmapText;
   private playBitmapText: Phaser.GameObjects.BitmapText;
+  private element: Phaser.GameObjects.DOMElement
 
   constructor() {
     super({
@@ -16,6 +29,7 @@ export class MenuScene extends Phaser.Scene {
 
   preload() : void{
     this.cameras.main.setBackgroundColor(0x98d687);
+    this.load.html('nameform', 'assets/html/formname.html');
   }
 
   init(data: ISceneConstructor): void {
@@ -54,8 +68,26 @@ export class MenuScene extends Phaser.Scene {
         this.titleBitmapText.width
       );
 
+      const querySnapshot = getDocs(query(collection(db, "highscores"), orderBy("score", "desc"), limit(3))).then(query => {
+        let text = "HIGHSCORE \n"
+        query.forEach((doc) => {
+            let data = doc.data();
+            text += data.name + ' : ' + data.score + '\n'
+        })
+        this.add.bitmapText(320, 400, 'font', text, 18);
+      });
+
     }else {
-      this.playBitmapText = this.add.bitmapText(280, 300, 'font', 'ENTER : PLAY', 25); 
+      this.element = this.add.dom(410, 300).createFromCache('nameform');
+      this.element.addListener('click');
+      let _this = this;
+      this.element.on('click', function(event: any){
+          if (event.target.name === 'playButton') {
+            let inputName = this.getChildByName('nameField');
+            _this.scene.start('MainScene', { player: inputName.value });
+          }
+      })
+
       this.playBitmapText = this.add.bitmapText(250, 340, 'font', 'F1  : INSTRUKSI', 25); 
 
       this.titleBitmapText = this.add.bitmapText(
