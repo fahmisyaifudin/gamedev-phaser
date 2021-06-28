@@ -3,6 +3,7 @@ import { collection, getDocs, limit, orderBy } from "firebase/firestore";
 
 import { initializeApp } from "firebase/app"
 import { getFirestore, query } from "firebase/firestore"
+import { GameObjects } from "phaser";
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyBm8Mkj2xapIYDXyeOzUGj305GL_YgJ-Yo',
@@ -13,8 +14,6 @@ const firebaseApp = initializeApp({
 const db = getFirestore();
 
 export class MenuScene extends Phaser.Scene {
-  private startKey: Phaser.Input.Keyboard.Key;
-  private helpKey: Phaser.Input.Keyboard.Key;
   private title: string;
   private score: number;
   private titleBitmapText: Phaser.GameObjects.BitmapText;
@@ -30,19 +29,10 @@ export class MenuScene extends Phaser.Scene {
   preload() : void{
     this.cameras.main.setBackgroundColor(0x98d687);
     this.load.html('nameform', 'assets/html/formname.html');
+    this.load.html('nameform', 'assets/html/back.html');
   }
 
   init(data: ISceneConstructor): void {
-    this.startKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.ENTER
-    );
-    this.helpKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.F1
-    );
-
-    this.startKey.isDown = false;
-    this.helpKey.isDown = false;
-
     this.title = data.title ? data.title : ''
     this.score = data.score ? data.score : 0
 
@@ -86,9 +76,15 @@ export class MenuScene extends Phaser.Scene {
             let inputName = this.getChildByName('nameField');
             _this.scene.start('MainScene', { player: inputName.value });
           }
-      })
 
-      this.playBitmapText = this.add.bitmapText(250, 340, 'font', 'F1  : INSTRUKSI', 25); 
+          if (event.target.name === 'instruction') {
+            _this.scene.start('InstructionScene');
+          }
+
+          if (event.target.name === 'highScore') {
+            _this.scene.start('HighScoreScene');
+          }
+      })
 
       this.titleBitmapText = this.add.bitmapText(
         0,
@@ -105,13 +101,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   update(): void {
-    if (this.startKey.isDown) {
-      this.scene.start('MainScene');
-    }
 
-    if (this.helpKey.isDown) {
-      this.scene.start('InstructionScene');
-    }
   }
 
   private getCenterXPositionOfBitmapText(width: number): number {

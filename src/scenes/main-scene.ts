@@ -97,7 +97,7 @@ export class MainScene extends Phaser.Scene {
 
     this.score = 0;
     this.mode = Gizi.Karbonhidrat;
-    this.modeText = this.add.text(16, 16, 'Misi: ' + Gizi[this.mode]);
+    this.modeText = this.add.text(16, 16, 'Misi: \n' + Gizi[this.mode]);
 
     this.physics.add.collider(this.player, this.platforms);
 
@@ -135,7 +135,7 @@ export class MainScene extends Phaser.Scene {
     } else {
       this.mode = 0;
     }
-    this.modeText.setText('Misi: ' + Gizi[this.mode]);
+    this.modeText.setText('Misi: \n' + Gizi[this.mode]);
   }
 
   private collectFood(player: Player, food: Phaser.Physics.Arcade.Image) {
@@ -156,13 +156,14 @@ export class MainScene extends Phaser.Scene {
 
   private autoHpDecrease(){
     if (this.player.hpVal <= 0) {
+      this.scene.pause();
       addDoc(collection(db, "highscores"), {
         name: this.playerName.toUpperCase(),
         score: this.score,
       }).then(() => this.scene.start('MenuScene', { title: 'GAME OVER', score: this.score }));
       // this.scene.start('MenuScene', { title: 'GAME OVER', score: this.score })
     }else{ 
-      this.player.hpDecrease(1)
+      this.player.hpDecrease(10)
     }
   }
 }

@@ -2,6 +2,7 @@ import { MenuScene } from './scenes/menu-scene';
 import { MainScene } from './scenes/main-scene';
 import { BootScene } from './scenes/boot-scene';
 import { InstructionScene } from './scenes/instruction-scene';
+import { HighScoreScene } from './scenes/highscore-scene';
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
   title: 'Webpack-Boilerplate',
@@ -21,5 +22,5 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
   dom: {
     createContainer: true
   },
-  scene: [BootScene, MenuScene, MainScene, InstructionScene]
+  scene: [BootScene, MenuScene, MainScene, InstructionScene, HighScoreScene]
 };

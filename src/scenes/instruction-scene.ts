@@ -3,6 +3,7 @@ export class InstructionScene extends Phaser.Scene {
   private title: string;
   private titleBitmapText: Phaser.GameObjects.BitmapText;
   private descBitmapText: Phaser.GameObjects.BitmapText;
+  private element: Phaser.GameObjects.DOMElement
 
   constructor() {
     super({
@@ -24,6 +25,8 @@ export class InstructionScene extends Phaser.Scene {
     this.load.image('meat', 'assets/food/meat.png');
     this.load.image('potato', 'assets/food/potato.png');
     this.load.image('wortel', 'assets/food/wortel.png');
+
+    this.load.html('backToMenu', 'assets/html/back.html');
   }
 
   init(): void {
@@ -111,6 +114,15 @@ export class InstructionScene extends Phaser.Scene {
     this.titleBitmapText.x = this.getCenterXPositionOfBitmapText(
         this.titleBitmapText.width
      );
+
+     this.element = this.add.dom(700, 500).createFromCache('backToMenu');
+     this.element.addListener('click');
+     let _this = this;
+     this.element.on('click', function(event: any){
+         if (event.target.name === 'backToMenu') {
+           _this.scene.start('MenuScene');
+         }
+     })
   }
 
   update(): void {
