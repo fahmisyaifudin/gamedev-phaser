@@ -163,7 +163,7 @@ export class MainScene extends Phaser.Scene {
       }).then(() => this.scene.start('MenuScene', { title: 'GAME OVER', score: this.score }));
       // this.scene.start('MenuScene', { title: 'GAME OVER', score: this.score })
     }else{ 
-      this.player.hpDecrease(10)
+      this.player.hpDecrease(1)
     }
   }
 }

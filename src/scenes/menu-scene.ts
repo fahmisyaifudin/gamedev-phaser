@@ -27,7 +27,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   preload() : void{
-    this.cameras.main.setBackgroundColor(0x98d687);
+    this.load.image('background', 'assets/background_menu.png');
     this.load.html('nameform', 'assets/html/formname.html');
     this.load.html('nameform', 'assets/html/back.html');
   }
@@ -39,6 +39,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create(): void { 
+    this.add.image(400, 300, 'background');
     if (this.title == 'GAME OVER') {
       this.playBitmapText = this.add.bitmapText(300, 300, 'font', 'SCORE : ' + this.score, 25);
 
@@ -85,18 +86,6 @@ export class MenuScene extends Phaser.Scene {
             _this.scene.start('HighScoreScene');
           }
       })
-
-      this.titleBitmapText = this.add.bitmapText(
-        0,
-        200,
-        'font',
-        'DIET SI MONKI',
-        30
-      );
-  
-      this.titleBitmapText.x = this.getCenterXPositionOfBitmapText(
-        this.titleBitmapText.width
-      );
     }
   }
 
